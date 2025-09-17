@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static chat.Kommunikation.nachrichtEmpfangen;
+
 /**
 * Server eines ganz einfachen Chats
 */
@@ -38,14 +40,22 @@ public class Server {
 		try
 		{
 			InputStream ein = so.getInputStream();		
-			OutputStream aus = so.getOutputStream(); 
+			OutputStream aus = so.getOutputStream();
+
+			Nachricht nachricht = nachrichtEmpfangen(ein);
+			System.out.println(nachricht);
+
+			String text = "Antwort vom Server: Hallo zurück";
+			Kommunikation.nachrichtSenden(aus, text, "Server");
 
 		}catch(IOException e)
 		{
 			e.printStackTrace();
-		}
-		
-		try {
+		} catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
 			seso.close();
 		} catch (IOException e) {
 			e.printStackTrace();

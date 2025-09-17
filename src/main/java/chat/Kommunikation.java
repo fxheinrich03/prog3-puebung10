@@ -2,6 +2,8 @@ package chat;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.*;
+import java.time.Instant;
 
 /**
  * Klasse für die Kommunikation in einem Chat
@@ -12,9 +14,12 @@ public class Kommunikation {
 	 * @param out OutputStream, der zum Chatpartner führt
 	 * @param text zu sendende Nachricht
 	 */
-	public static void nachrichtSenden(OutputStream out, String text)
-	{
-		
+	public static void nachrichtSenden(OutputStream out, String text, String absender) throws IOException {
+		ObjectOutputStream oout = new ObjectOutputStream(out);
+		Instant time = Instant.from(Instant.now());
+
+		Nachricht nachricht = new Nachricht(text, absender, time);
+		oout.writeObject(nachricht);
 	}
 	
 	/**
@@ -22,8 +27,8 @@ public class Kommunikation {
 	 * @param in dem InputStream vom Chatpartner
 	 * @return empfangene Nachricht
 	 */
-	public static String nachrichtEmpfangen(InputStream in)
-	{
-		return null;
+	public static Nachricht nachrichtEmpfangen(InputStream in) throws IOException, ClassNotFoundException {
+		ObjectInputStream oin = new ObjectInputStream(in);
+		return (Nachricht) oin.readObject();
 	}
 }

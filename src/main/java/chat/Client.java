@@ -7,6 +7,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import static chat.Kommunikation.nachrichtEmpfangen;
+import static chat.Kommunikation.nachrichtSenden;
+
 /**
 * Client für einen ganz einfachen Chat
 */
@@ -33,12 +36,20 @@ public class Client {
 		try {
 			OutputStream aus = so.getOutputStream();		
 			InputStream ein = so.getInputStream();
+
+			String text = "Client sagt hallo";
+			nachrichtSenden(aus, text, "Client");
+
+			Nachricht antwort = nachrichtEmpfangen(ein);
+			System.out.println(antwort);
 						
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		try {
+		} catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
 			so.close();
 		} catch (IOException e) {
 			e.printStackTrace();
